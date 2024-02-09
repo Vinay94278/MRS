@@ -1,5 +1,6 @@
 import streamlit as st
 import pickle
+import os
 import pandas as pd
 import requests
 
@@ -8,9 +9,18 @@ def fetch_poster(movie_id):
     data = response.json()
     return "https://image.tmdb.org/t/p/w500/" + str(data['poster_path'])
 
-movies_dict = pickle.load(open('pickle\movie_dict.pkl','rb'))
+# Get the absolute path to the pickle directory
+pickle_dir = os.path.join(os.path.dirname(__file__), 'pickle')
+
+# Construct the file path to movie_dict.pkl
+movie_dict_path = os.path.join(pickle_dir, 'movie_dict.pkl')
+
+# Construct the file path to movie_dict.pkl
+similarity_path = os.path.join(pickle_dir, 'similarity.pkl')
+
+movies_dict = pickle.load(open(movie_dict_path,'rb'))
 df = pd.DataFrame(movies_dict)
-similarity = pickle.load(open('pickle\similarity.pkl','rb'))
+similarity = pickle.load(open(similarity_path,'rb'))
 
 def recommend(movie):
     movie_index = df[df['title'] == movie].index[0]
